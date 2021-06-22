@@ -38,6 +38,6 @@ export class SecvestSmokeAccessory {
 
       this.platform.log.debug('set SmokeDetected (' + device.name + '): ' + newState);
       this.service.setCharacteristic(sd, newState);
-    }
+    };
   }
 }

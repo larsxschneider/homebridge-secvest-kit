@@ -25,9 +25,9 @@ export class SecvestMotionAccessory {
     this.service.setCharacteristic(this.platform.Characteristic.Name, accessory.context.device.name);
 
     accessory.context.update = (device) => {
-      const newState = (device.state === "open");
+      const newState = (device.state === 'open');
       this.platform.log.debug(`set MotionDetected (${device.name}): ${newState}`);
       this.service.setCharacteristic(this.platform.Characteristic.MotionDetected, newState);
-    }
+    };
   }
 }

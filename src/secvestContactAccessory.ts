@@ -52,20 +52,20 @@ export class SecvestContactAccessory {
         this.platform.log.debug(`${this.accessory.context.device.name} is open for ${openSinceMin} min (notification will be send on ${new Date(this.getScheduledNotification()).toString()})`);
 
         if (shouldSendNotification) {
-          this.sendNotification(`${this.accessory.context.device.name} ist seit ${openSinceMin} Minuten offen.`)
+          this.sendNotification(`${this.accessory.context.device.name} ist seit ${openSinceMin} Minuten offen.`);
           this.scheduleNotification();
         }
       }
 
       this.platform.log.debug('set ContactSensorState (' + device.name + '): ' + newState);
       this.service.setCharacteristic(css, newState);
-    }
+    };
   }
 
   // NOTIFICATIONS
 
   isNotificationEnabled() {
-    return  this.platform.config.pushover &&
+    return this.platform.config.pushover &&
            !this.platform.config.pushover.ignoredZones.includes(this.accessory.context.device.id);
   }
 
@@ -82,9 +82,9 @@ export class SecvestContactAccessory {
   sendNotification(message) {
     this.platform.log.info(`send notification: ${message}`);
     const data = JSON.stringify({
-       token  : this.platform.config.pushover.token,
-       user   : this.platform.config.pushover.user,
-       message: message
+      token  : this.platform.config.pushover.token,
+      user   : this.platform.config.pushover.user,
+      message: message,
     });
     const options = {
       method: 'POST',
@@ -92,8 +92,8 @@ export class SecvestContactAccessory {
       port: 443,
       path: '/1/messages.json',
       headers: {
-        'Content-Type'  : 'application/json'
-      }
+        'Content-Type'  : 'application/json',
+      },
     };
     const req = request(options);
     req.write(data);

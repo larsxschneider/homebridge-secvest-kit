@@ -41,14 +41,17 @@ export class SecvestPlatform implements DynamicPlatformPlugin {
       this.discoverDevices();
       setInterval(async () => {
         this.log.info('Polling Secvest state...');
-          this.queryDevices(async (device) => {
-            const accessory = this.accessories.find(a => a.UUID === device.uuid);
-            if (accessory) {
-              accessory.context.device = device;
-              try { accessory.context.update(device); }
-              catch (error) { this.log.error(error); }
+        this.queryDevices(async (device) => {
+          const accessory = this.accessories.find(a => a.UUID === device.uuid);
+          if (accessory) {
+            accessory.context.device = device;
+            try {
+              accessory.context.update(device);
+            } catch (error) {
+              this.log.error(error);
             }
-          });
+          }
+        });
       }, this.config.pollingInterval * 60000);
     });
   }
@@ -69,7 +72,7 @@ export class SecvestPlatform implements DynamicPlatformPlugin {
       method: 'GET',
       hostname: this.config.host,
       port: this.config.port,
-      path: `/system/partitions/`,
+      path: '/system/partitions/',
       auth: `${this.config.username}:${this.config.password}`,
       rejectUnauthorized: false,
       agent: false,
@@ -78,7 +81,7 @@ export class SecvestPlatform implements DynamicPlatformPlugin {
     return new Promise(resolve => {
       request(
         options,
-        function(response) {
+        (response) => {
           let data = '';
           response.on('data', (chunk) => {
             data += chunk.toString('utf8');
@@ -91,14 +94,14 @@ export class SecvestPlatform implements DynamicPlatformPlugin {
                 uuid: that.api.hap.uuid.generate(`secvest-partition-${z.id}`),
                 type: 'partition',
                 name: z.name,
-                state: z.state
+                state: z.state,
               }));
             resolve(partitions);
           });
-        }
+        },
       )
-      .end();
-    })
+        .end();
+    });
   }
 
   async queryZones(partition): Promise<object[]> {
@@ -115,7 +118,7 @@ export class SecvestPlatform implements DynamicPlatformPlugin {
     return new Promise(resolve => {
       request(
         options,
-        function(response) {
+        (response) => {
           let data = '';
           response.on('data', (chunk) => {
             data += chunk.toString('utf8');
@@ -128,14 +131,14 @@ export class SecvestPlatform implements DynamicPlatformPlugin {
                 uuid: that.api.hap.uuid.generate(`secvest-zone-${z.id}`),
                 type: that.config.zoneTypes[z.id] || 'contact',
                 name: z.name,
-                state: z.state
+                state: z.state,
               }));
             resolve(zones);
           });
-        }
+        },
       )
-      .end();
-    })
+        .end();
+    });
   }
 
   // Read all partitions and return the devices (also called "zones").
@@ -148,13 +151,21 @@ export class SecvestPlatform implements DynamicPlatformPlugin {
     // Zones
     for (const id of this.config.accessoryPartitions) {
       const devices = await this.queryZones(id);
-      if (callback) { devices.forEach((device) => { callback(device); }); };
+      if (callback) {
+        devices.forEach((device) => {
+          callback(device);
+        });
+      }
       allDevices.push(...devices);
     }
 
     // Partitions
     const partitions = await this.queryPartitions();
-    if (callback) { partitions.forEach((partition) => { callback(partition); }); };
+    if (callback) {
+      partitions.forEach((partition) => {
+        callback(partition);
+      });
+    }
     allDevices.push(...partitions);
 
     return allDevices;
@@ -172,15 +183,15 @@ export class SecvestPlatform implements DynamicPlatformPlugin {
   unregisterMissingAccessories(devices) {
     for (const accessory of this.accessories) {
       const existingDevice = devices.find(device => accessory.UUID === device.uuid);
-       if (!existingDevice) {
-         this.log.warn('Removing accessory:', accessory.displayName);
-         this.api.unregisterPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [accessory]);
-       }
+      if (!existingDevice) {
+        this.log.warn('Removing accessory:', accessory.displayName);
+        this.api.unregisterPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [accessory]);
+      }
     }
   }
 
   setupAccessories(devices) {
-     // loop over the discovered devices and register each one if it has not already been registered
+    // loop over the discovered devices and register each one if it has not already been registered
     for (const device of devices) {
       // see if an accessory with the same uuid has already been registered and restored from
       // the cached devices we stored in the `configureAccessory` method above
@@ -198,12 +209,12 @@ export class SecvestPlatform implements DynamicPlatformPlugin {
       }
 
       switch (device.type) {
-         case 'lock'     : new SecvestLockAccessory(this, accessory);      break;
-         case 'motion'   : new SecvestMotionAccessory(this, accessory);    break;
-         case 'partition': new SecvestPartitionAccessory(this, accessory); break;
-         case 'smoke'    : new SecvestSmokeAccessory(this, accessory);     break;
-         case 'water'    : new SecvestWaterAccessory(this, accessory);     break;
-         default         : new SecvestContactAccessory(this, accessory);
+        case 'lock' : new SecvestLockAccessory(this, accessory); break;
+        case 'motion' : new SecvestMotionAccessory(this, accessory); break;
+        case 'partition': new SecvestPartitionAccessory(this, accessory); break;
+        case 'smoke' : new SecvestSmokeAccessory(this, accessory); break;
+        case 'water' : new SecvestWaterAccessory(this, accessory); break;
+        default : new SecvestContactAccessory(this, accessory);
       }
 
       if (isNewAccessory) {
@@ -221,7 +232,7 @@ export class SecvestPlatform implements DynamicPlatformPlugin {
    */
   async discoverDevices() {
     const devices = await this.queryDevices();
-    this.log.debug(devices.length + ' Secvest devices found')
+    this.log.debug(devices.length + ' Secvest devices found');
 
     this.unregisterMissingAccessories(devices);
     this.setupAccessories(devices);

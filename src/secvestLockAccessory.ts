@@ -18,7 +18,7 @@ export class SecvestLockAccessory {
     this.accessory.getService(this.platform.Service.AccessoryInformation)!
       .setCharacteristic(this.platform.Characteristic.Manufacturer, 'ABUS')
       .setCharacteristic(this.platform.Characteristic.Model, 'Riegelschaltkontakt')
-      .setCharacteristic(this.platform.Characteristic.SerialNumber, accessory.context.device.id)
+      .setCharacteristic(this.platform.Characteristic.SerialNumber, accessory.context.device.id);
 
     this.service = accessory.getService(this.platform.Service.LockMechanism)
       || accessory.addService(this.platform.Service.LockMechanism);
@@ -34,8 +34,11 @@ export class SecvestLockAccessory {
         const device = this.accessory.context.device;
         let newState = lcs.UNKNOWN;
 
-        if      (targetState === lts.SECURED && device.state === "closed") { newState = lcs.SECURED;   }
-        else if (targetState === lts.UNSECURED && device.state === "open") { newState = lcs.UNSECURED; }
+        if (targetState === lts.SECURED && device.state === 'closed') {
+          newState = lcs.SECURED;
+        } else if (targetState === lts.UNSECURED && device.state === 'open') {
+          newState = lcs.UNSECURED;
+        }
 
         this.platform.log.debug('set LockCurrentState (' + this.accessory.context.device.name + '): target(' + targetState + '), device (' + device.state + '), new(' + newState + ')');
         this.service.setCharacteristic(lcs, newState);
@@ -43,10 +46,12 @@ export class SecvestLockAccessory {
 
     accessory.context.update = (device) => {
       let newState = lts.UNSECURED;
-      if (device.state === "closed") { newState = lts.SECURED; }
+      if (device.state === 'closed') {
+        newState = lts.SECURED;
+      }
 
       this.platform.log.debug(`set LockTargetState (${device.name}): ${newState}`);
       this.service.setCharacteristic(lts, newState);
-    }
+    };
   }
 }

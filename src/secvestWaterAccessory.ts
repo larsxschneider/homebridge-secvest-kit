@@ -38,6 +38,6 @@ export class SecvestWaterAccessory {
 
       this.platform.log.debug('set LeakDetected (' + device.name + '): ' + newState);
       this.service.setCharacteristic(sd, newState);
-    }
+    };
   }
 }

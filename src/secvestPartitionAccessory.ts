@@ -34,8 +34,11 @@ export class SecvestPartitionAccessory {
         const device = this.accessory.context.device;
         let newState = sscs.DISARMED;
 
-        if      (targetState === ssts.STAY_ARM && device.state === "partset") { newState = sscs.STAY_ARM; }
-        else if (targetState === ssts.AWAY_ARM && device.state === "set")     { newState = sscs.AWAY_ARM; }
+        if (targetState === ssts.STAY_ARM && device.state === 'partset') {
+          newState = sscs.STAY_ARM;
+        } else if (targetState === ssts.AWAY_ARM && device.state === 'set') {
+          newState = sscs.AWAY_ARM;
+        }
 
         this.platform.log.debug('set SecuritySystemCurrentState (' + this.accessory.context.device.name + '): target(' + targetState + '), device (' + device.state + '), new(' + newState + ')');
         this.service.setCharacteristic(sscs, newState);
@@ -44,11 +47,14 @@ export class SecvestPartitionAccessory {
     accessory.context.update = (device) => {
       let newState = ssts.DISARM;
 
-      if      (device.state === "partset") { newState = ssts.STAY_ARM; }
-      else if (device.state === "set")     { newState = ssts.AWAY_ARM; }
+      if (device.state === 'partset') {
+        newState = ssts.STAY_ARM;
+      } else if (device.state === 'set') {
+        newState = ssts.AWAY_ARM;
+      }
 
       this.platform.log.debug('set SecuritySystemTargetState (' + device.name + '): ' + newState);
       this.service.setCharacteristic(ssts, newState);
-    }
+    };
   }
 }
