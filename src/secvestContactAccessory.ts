@@ -1,4 +1,4 @@
-import { Service, PlatformAccessory, CharacteristicValue } from 'homebridge';
+import { Service, PlatformAccessory } from 'homebridge';
 import { request } from 'https';
 import { SecvestPlatform } from './platform';
 
@@ -49,7 +49,8 @@ export class SecvestContactAccessory {
         const shouldSendNotification = openSinceMin >= this.platform.config.pushover.notificationDelay &&
             now >= this.getScheduledNotification();
 
-        this.platform.log.debug(`${this.accessory.context.device.name} is open for ${openSinceMin} min (notification will be send on ${new Date(this.getScheduledNotification()).toString()})`);
+        this.platform.log.debug(`${this.accessory.context.device.name} is open for ${openSinceMin} min ` +
+          `(notification will be send on ${new Date(this.getScheduledNotification()).toString()})`);
 
         if (shouldSendNotification) {
           this.sendNotification(`${this.accessory.context.device.name} ist seit ${openSinceMin} Minuten offen.`);

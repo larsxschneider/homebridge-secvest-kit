@@ -40,7 +40,8 @@ export class SecvestLockAccessory {
           newState = lcs.UNSECURED;
         }
 
-        this.platform.log.debug('set LockCurrentState (' + this.accessory.context.device.name + '): target(' + targetState + '), device (' + device.state + '), new(' + newState + ')');
+        this.platform.log.debug('set LockCurrentState (' + this.accessory.context.device.name + '):' +
+          ' target(' + targetState + '), device (' + device.state + '), new(' + newState + ')');
         this.service.setCharacteristic(lcs, newState);
       });
 
