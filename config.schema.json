@@ -1,0 +1,122 @@
+{
+  "pluginAlias": "SecvestKit",
+  "pluginType": "platform",
+  "singular": true,
+  "schema": {
+    "type": "object",
+    "properties": {
+      "host": {
+        "title": "Host",
+        "type": "string",
+        "required": true
+      },
+      "port": {
+        "title": "Port",
+        "type": "integer",
+        "required": true,
+        "default": "4433"
+      },
+      "username": {
+        "title": "Username",
+        "type": "string",
+        "required": true
+      },
+      "password": {
+        "title": "Password",
+        "type": "string",
+        "required": true
+      },
+      "securityPartitions": {
+        "title": "Security partitions",
+        "type": "array",
+        "items": {
+          "title": "Partition",
+          "type": "integer",
+          "pattern": "^[1-4]$"
+        }
+      },
+      "accessoryPartitions": {
+        "title": "Accessory partitions",
+        "type": "array",
+        "items": {
+          "title": "Partition",
+          "type": "integer",
+          "pattern": "^[1-4]$"
+        }
+      },
+      "zoneTypes": {
+        "title": "Zone Types",
+        "type": "object",
+        "properties": {
+          "zone": {
+            "title": "Zone type",
+            "type": "string",
+            "oneOf": [{
+                "title": "lock",
+                "enum": [
+                  "lock"
+                ]
+              },
+              {
+                "title": "motion sensor",
+                "enum": [
+                  "motion"
+                ]
+              },
+              {
+                "title": "water sensor",
+                "enum": [
+                  "water"
+                ]
+              },
+              {
+                "title": "smoke sensor",
+                "enum": [
+                  "smoke"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "pollingInterval": {
+        "title": "Polling interval in minutes",
+        "type": "integer",
+        "required": true,
+        "default": "1"
+      },
+      "pushover": {
+        "title": "Pushover Configuration",
+        "type": "object",
+        "properties": {
+          "notificationDelay": {
+            "title": "Notification delay",
+            "type": "integer",
+            "required": true,
+            "default": "15"
+          },
+          "ignoredZones": {
+            "title": "Ignored zones",
+            "type": "array",
+            "items": {
+              "title": "Zone",
+              "type": "integer",
+              "pattern": "^[1-4]$"
+            }
+          },
+          "user": {
+            "title": "user",
+            "type": "string",
+            "required": true
+          },
+          "token": {
+            "title": "token",
+            "type": "string",
+            "required": true
+          }
+
+        }
+      }
+    }
+  }
+}
