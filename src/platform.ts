@@ -67,6 +67,7 @@ export class SecvestPlatform implements DynamicPlatformPlugin {
     this.accessories.push(accessory);
   }
 
+  // eslint-disable-next-line @typescript-eslint/ban-types
   async queryPartitions(): Promise<object[]> {
     const options = {
       method: 'GET',
@@ -77,6 +78,7 @@ export class SecvestPlatform implements DynamicPlatformPlugin {
       rejectUnauthorized: false,
       agent: false,
     };
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     const that = this;
     return new Promise(resolve => {
       request(
@@ -104,6 +106,7 @@ export class SecvestPlatform implements DynamicPlatformPlugin {
     });
   }
 
+  // eslint-disable-next-line @typescript-eslint/ban-types
   async queryZones(partition): Promise<object[]> {
     const options = {
       method: 'GET',
@@ -114,6 +117,7 @@ export class SecvestPlatform implements DynamicPlatformPlugin {
       rejectUnauthorized: false,
       agent: false,
     };
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     const that = this;
     return new Promise(resolve => {
       request(
@@ -145,7 +149,9 @@ export class SecvestPlatform implements DynamicPlatformPlugin {
   // The function takes a callback that is executed as soon as we retrieve
   // information about a device. This is way we can report updates to HomeKit
   // sooner if we query more than one partition.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async queryDevices(callback?: (device: any) => void) {
+    // eslint-disable-next-line @typescript-eslint/ban-types
     const allDevices : object[] = [];
 
     // Zones
